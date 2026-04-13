@@ -22,21 +22,21 @@ modules:
     sources:
       - type: git
         url: https://github.com/makoni/swifty-notes-gtk.git
-        commit: 4bd2191e1b98b305b736f11ff677fd59aac85d4c
+        commit: e08122918d43f643dd6a92c57ae9239e1c962b8f
       - type: git
         url: https://github.com/makoni/swift-adwaita.git
-        commit: d66e7f86e4ce6cbbe503b81f08b89fe8b9ad8b42
+        commit: a9046505ba5c0adf7ab34d1fafa20837ec0d4e7e
         dest: flatpak-deps/swift-adwaita
       - type: git
         url: https://github.com/swiftlang/swift-markdown.git
-        commit: 7d9a5ce307528578dfa777d505496bd5f544ad94
+        commit: 55d66d9a9e8d4fd3f48d111b0d437e82fe451903
         dest: flatpak-deps/swift-markdown
       - type: git
         url: https://github.com/swiftlang/swift-cmark.git
-        commit: 5d9bdaa4228b381639fff09403e39a04926e2dbe
+        commit: 924936d0427cb25a61169739a7660230bffa6ea6
         dest: flatpak-deps/swift-cmark
     build-commands:
-      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --version 4bd2191 --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 4bd2191e1b98b305b736f11ff677fd59aac85d4c --dest flatpak-app --prefix /app
+      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref e08122918d43f643dd6a92c57ae9239e1c962b8f --dest flatpak-app --prefix /app
       - cp -a flatpak-app/app/. /app/
       - install -Dm644 flatpak-deps/swift-adwaita/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-adwaita/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/LICENSE.txt
