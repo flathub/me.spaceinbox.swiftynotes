@@ -11,6 +11,7 @@ finish-args:
   - --socket=wayland
   - --socket=fallback-x11
   - --device=dri
+  - --filesystem=home
 
 build-options:
   append-path: /usr/lib/sdk/swift6/bin
@@ -22,7 +23,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/makoni/swifty-notes-gtk.git
-        commit: 2b3a03453d45996f996f79f5af0695ca208004d9
+        commit: 33fa765769cf042d3f4c9f2caf26b662205b4cc8
       - type: git
         url: https://github.com/makoni/swift-adwaita.git
         commit: a060a229e54037bff473d8c35f458f73488e975b
@@ -36,7 +37,7 @@ modules:
         commit: 924936d0427cb25a61169739a7660230bffa6ea6
         dest: flatpak-deps/swift-cmark
     build-commands:
-      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 2b3a03453d45996f996f79f5af0695ca208004d9 --dest flatpak-app --prefix /app
+      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 33fa765769cf042d3f4c9f2caf26b662205b4cc8 --dest flatpak-app --prefix /app
       - cp -a flatpak-app/app/. /app/
       - install -Dm644 flatpak-deps/swift-adwaita/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-adwaita/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/LICENSE.txt
