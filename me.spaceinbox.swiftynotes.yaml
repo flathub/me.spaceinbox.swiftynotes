@@ -18,12 +18,29 @@ build-options:
   prepend-ld-library-path: /usr/lib/sdk/swift6/lib
 
 modules:
+  # GNOME Platform 50 doesn't ship libspelling-1 dev headers in the SDK,
+  # so build it from source before our app module compiles the CSpelling
+  # shim. Pinned to the latest stable upstream tag.
+  - name: libspelling
+    buildsystem: meson
+    config-opts:
+      - -Dvapi=false
+      - -Ddocs=false
+    cleanup:
+      - /lib/girepository-1.0
+      - /share/gir-1.0
+      - /share/vala
+    sources:
+      - type: git
+        url: https://gitlab.gnome.org/GNOME/libspelling.git
+        tag: "0.4.9"
+
   - name: swifty-notes
     buildsystem: simple
     sources:
       - type: git
         url: https://github.com/makoni/swifty-notes-gtk.git
-        commit: ddf24c38d5d89a86973f303dceeaaffbb9201ebe
+        commit: a98b2ceb42eaaecb22c47b65bdafde8c6c01284d
       - type: git
         url: https://github.com/makoni/swift-adwaita.git
         commit: a060a229e54037bff473d8c35f458f73488e975b
@@ -37,7 +54,7 @@ modules:
         commit: 924936d0427cb25a61169739a7660230bffa6ea6
         dest: flatpak-deps/swift-cmark
     build-commands:
-      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref ddf24c38d5d89a86973f303dceeaaffbb9201ebe --dest flatpak-app --prefix /app
+      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref a98b2ceb42eaaecb22c47b65bdafde8c6c01284d --dest flatpak-app --prefix /app
       - cp -a flatpak-app/app/. /app/
       - install -Dm644 flatpak-deps/swift-adwaita/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-adwaita/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/LICENSE.txt
