@@ -34,6 +34,7 @@ modules:
       - type: git
         url: https://gitlab.gnome.org/GNOME/libspelling.git
         tag: "0.4.10"
+        commit: 1facdde8e1c0fd72bed806f9a9be2fbec83af5f2
 
   # Bundle hunspell dictionaries for the most common languages so spellcheck
   # works out-of-the-box on every Flatpak install. Without this the runtime's
