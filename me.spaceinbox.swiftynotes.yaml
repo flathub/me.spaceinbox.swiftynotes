@@ -110,7 +110,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/makoni/swifty-notes-gtk.git
-        commit: 2bd2850cd47e4aef3314cf7dcb1e7371893eb244
+        commit: ae77ce060c2dbe6bf904012926b8dedd6a272e17
       - type: git
         url: https://github.com/makoni/swift-adwaita.git
         commit: fccac15277fdf38aaf68d2e088caeb01f64f8945
@@ -124,9 +124,10 @@ modules:
         commit: 924936d0427cb25a61169739a7660230bffa6ea6
         dest: flatpak-deps/swift-cmark
     build-commands:
-      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 2bd2850cd47e4aef3314cf7dcb1e7371893eb244 --dest flatpak-app --prefix /app
+      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref ae77ce060c2dbe6bf904012926b8dedd6a272e17 --dest flatpak-app --prefix /app
       - cp -a flatpak-app/app/. /app/
       - install -Dm644 flatpak-deps/swift-adwaita/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-adwaita/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/NOTICE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/NOTICE.txt
       - install -Dm644 flatpak-deps/swift-cmark/COPYING /app/share/licenses/me.spaceinbox.swiftynotes/swift-cmark/COPYING
+      - install -Dm644 Sources/SwiftyNotes/Resources/gemoji-LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/gemoji/LICENSE.txt
