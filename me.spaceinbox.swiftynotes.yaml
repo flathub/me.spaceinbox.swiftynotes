@@ -1,9 +1,11 @@
 app-id: me.spaceinbox.swiftynotes
 runtime: org.gnome.Platform
-runtime-version: "50"
+runtime-version: "51"
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.swift6
+  # Builds the math engine (RaTeX, Rust) that the app links statically.
+  - org.freedesktop.Sdk.Extension.rust-stable
 command: swiftynotes
 
 finish-args:
@@ -14,13 +16,15 @@ finish-args:
   - --filesystem=home
 
 build-options:
-  append-path: /usr/lib/sdk/swift6/bin
+  # One colon-separated string: flatpak-builder reads append-path as a
+  # single string, not a list.
+  append-path: /usr/lib/sdk/swift6/bin:/usr/lib/sdk/rust-stable/bin
   prepend-ld-library-path: /usr/lib/sdk/swift6/lib
 
 modules:
-  # GNOME Platform 50 doesn't ship libspelling-1 dev headers in the SDK,
-  # so build it from source before our app module compiles the CSpelling
-  # shim. Pinned to the latest stable upstream tag.
+  # GNOME Platform 51 doesn't ship libspelling-1 dev headers in the SDK, so
+  # build it from source before our app module compiles the CSpelling shim.
+  # Pinned to the latest stable tag at the time of writing.
   - name: libspelling
     buildsystem: meson
     config-opts:
@@ -107,13 +111,22 @@ modules:
 
   - name: swifty-notes
     buildsystem: simple
+    build-options:
+      env:
+        # The crates come from ratex-cargo-sources.json (the build has no
+        # network); its cargo config sits in this module's cargo/ directory.
+        CARGO_HOME: /run/build/swifty-notes/cargo
+        RATEX_BRIDGE_OFFLINE: "1"
     sources:
       - type: git
         url: https://github.com/makoni/swifty-notes-gtk.git
-        commit: 805932a0233098b6ce7e4809bc6835be55b89b7d
+        commit: 172cca387bae87ee77f233e7c580b48150231c2d
+      # Regenerate with scripts/generate-flatpak-cargo-sources.py after
+      # changing Sources/RaTeXBridge/Cargo.lock.
+      - ratex-cargo-sources.json
       - type: git
         url: https://github.com/makoni/swift-adwaita.git
-        commit: c79a5c2220508cc2a42842214d19f25384c28cd2
+        commit: c6b8a4ca5d89a47239b955c0174bf1849fb999ad
         dest: flatpak-deps/swift-adwaita
       - type: git
         url: https://github.com/swiftlang/swift-markdown.git
@@ -124,7 +137,7 @@ modules:
         commit: 924936d0427cb25a61169739a7660230bffa6ea6
         dest: flatpak-deps/swift-cmark
     build-commands:
-      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 805932a0233098b6ce7e4809bc6835be55b89b7d --dest flatpak-app --prefix /app
+      - rm -f Package.resolved && SWIFTY_NOTES_USE_BUNDLED_SWIFTPM_DEPS=1 packaging/release/assemble-install-root.sh --license-subdir me.spaceinbox.swiftynotes --repo-slug makoni/swifty-notes-gtk --repo-ref 172cca387bae87ee77f233e7c580b48150231c2d --dest flatpak-app --prefix /app
       - cp -a flatpak-app/app/. /app/
       - install -Dm644 flatpak-deps/swift-adwaita/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-adwaita/LICENSE.txt
       - install -Dm644 flatpak-deps/swift-markdown/LICENSE.txt /app/share/licenses/me.spaceinbox.swiftynotes/swift-markdown/LICENSE.txt
